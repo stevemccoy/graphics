@@ -16,6 +16,14 @@ def grid(win, nx, ny, w, h):
 		l = Line(Point(ox, y), Point(total_width, y))
 		l.setOutline('black')
 		l.draw(win)
+	for i in range(nx):
+		for j in range(ny):
+			x = ox + i * w + w/2
+			y = oy + j * h + h/2
+			c = Circle(Point(x,y), min(w,h) / 2 - 4)
+			c.setOutline('black')
+			c.setFill('red')
+			c.draw(win)
 
 
 def main():
@@ -23,7 +31,6 @@ def main():
 	win.setBackground('pink')
 
 	grid(win, 10, 10, 40, 40)
-
 
 	win.getMouse()
 	win.close()
