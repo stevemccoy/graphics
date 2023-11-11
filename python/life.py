@@ -22,6 +22,7 @@ class Life:
     def __init__(self, width, height):
         self.nx = width
         self.ny = height
+        # Update aframe, copy forward to bframe and display bframe.
         self.aframe = np.zeros((self.nx,self.ny), dtype=np.uint8)
         self.bframe = np.zeros((self.nx,self.ny), dtype=np.uint8)
         self.iterations = 0
@@ -37,11 +38,11 @@ class Life:
             for y in range(self.ny):
                 frame[x][y] = 0
 
-    # Move the image from the B frame (update) to the A frame (display)    
+    # Move the image from the A frame (update) to the B frame (display)    
     def refresh_frames(self):
         for x in range(self.nx):
             for y in range(self.ny):
-                self.aframe[x][y] = self.bframe[x][y]
+                self.bframe[x][y] = self.aframe[x][y]
     
    # Load an initial figure into the array, at the centre.
     def load(self, initial):
@@ -51,13 +52,13 @@ class Life:
         if w < self.nx and h < self.ny:
             for x in range(w):
                 for y in range(h):
-                    self.bframe[startx + x][starty + y] = initial[x][y]
+                    self.aframe[startx + x][starty + y] = initial[x][y]
 
     def display(self):
         for y in range(self.ny):
             line = '|'
             for x in range(self.nx):
-                if self.aframe[x][y] == 0:
+                if self.bframe[x][y] == 0:
                     line = line + ' '
                 else:
                     line = line + '1'
@@ -74,7 +75,7 @@ class Life:
             y += self.ny
         elif y >= self.ny:
             y %= self.ny
-        return self.aframe[x][y] != 0
+        return self.bframe[x][y] != 0
                         
     # Determine how many neighbours of the given cell are alive.
     def neighbour_count(self, x, y):

@@ -40,26 +40,30 @@ def refresh_whole_grid():
             draw_cell(x, y)
 
 def update_cell(col, row):
-    cell = bg[col][row]
+    cell = fg[col][row]
     x1, y1 = max(col - 1, 0), max(row - 1, 0)
     x2, y2 = min(col + 2, num_cols), min(row + 2, num_rows)
-    count = sum(sum(bg[x1:x2, y1:y2])) - cell
+    count = sum(sum(fg[x1:x2, y1:y2])) - cell
     if cell:
         if count < 2 or count > 3:
-            fg[col][row] = 0
+            bg[col][row] = 0
             return True
     else:
         if count == 3:
-            fg[col][row] = 1
+            bg[col][row] = 1
             return True
     return False
 
 def update_frame():
     bg = np.copy(fg)
+    updates = []
     for y in range(num_rows):
         for x in range(num_cols):
             if update_cell(x, y):
-                draw_cell(x, y)
+                updates.append((x, y))
+    fg = np.copy(bg)
+    for (x, y) in updates.iteritems():
+        draw_cell(x, y)
 
 # Initialise and run.
 pg.init()
@@ -82,10 +86,10 @@ while True:
     update_frame()
 
 #    r = pg.draw.rect(screen, grid_color, (100,100,100,100) )
-#    screen.update()
+    screen.update()
 
     # Render the graphics here.
     # ...
 
     pg.display.flip()  # Refresh on-screen display
-#    clock.tick(60)         # wait until next frame (at 60 FPS)
+    clock.tick(60)         # wait until next frame (at 60 FPS)
